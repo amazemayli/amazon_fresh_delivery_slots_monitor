@@ -6,19 +6,13 @@ from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from twilio.rest import Client
 
+from config import * # local configuration
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(BASE_DIR)
 chromedriver = ROOT_DIR + "/chromedriver"
 
-# amazon credentials
-amazon_username = "first.last@email.com"
-amazon_password = "secret_password"
-
-# twilio configuration
-to_mobilenumber = "+18888888888"
-from_mobilenumber = "+19999999999"
-account_sid = "fake_account_sid"
-auth_token = "fake_auth_token"
+# create twilio client
 client = Client(account_sid, auth_token)
 
 def create_driver():
@@ -79,9 +73,9 @@ def check_slots():
                 more_dows = not next_button.get_property('disabled')
                 if more_dows: next_button.click()
 
-            if slots_available: 
-                client.messages.create(to=to_mobilenumber, 
-                       from_=from_mobilenumber, 
+            if slots_available:
+                client.messages.create(to=to_mobilenumber,
+                       from_=from_mobilenumber,
                        body=available_slots)
                 print('Slots Available!')
             else:
@@ -89,7 +83,7 @@ def check_slots():
                 more_dows = True
                 time.sleep(300)
                 driver.refresh()
-        
+
         terminate(driver)
     except Exception as e:
         terminate(driver)
