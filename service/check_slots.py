@@ -1,10 +1,11 @@
 import sys, os, re, requests, time
+import itertools
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from twilio.rest import Client
+# from twilio.rest import Client
 
 from config import * # local configuration
 
@@ -13,7 +14,7 @@ ROOT_DIR = os.path.dirname(BASE_DIR)
 chromedriver = ROOT_DIR + "/chromedriver"
 
 # create twilio client
-client = Client(account_sid, auth_token)
+# client = Client(account_sid, auth_token)
 
 def create_driver():
     chrome_options = webdriver.ChromeOptions()
@@ -38,13 +39,13 @@ def check_slots():
         password_field = driver.find_element_by_css_selector('#ap_password')
         password_field.send_keys(amazon_password)
         driver.find_element_by_css_selector('#signInSubmit').click()
+        input("Press Enter after completing secondary authentication challenge")
         time.sleep(1.5)
-
-        print('Redirecting to AmazonFresh ...')
-        driver.get('https://www.amazon.com/alm/storefront?almBrandId=QW1hem9uIEZyZXNo')
+        print('Redirecting to Shopping Cart ...')
+        driver.get('https://www.amazon.com/gp/cart/view.html')
         time.sleep(1.5)
         print('Checkout Step One ...')
-        driver.find_element_by_name('proceedToFreshCheckout').click()
+        driver.find_element_by_xpath("//span[contains(.,'Checkout Amazon Fresh Cart')]").click()
         time.sleep(1.5)
         print('Checkout Step Two ...')
         driver.find_element_by_name('proceedToCheckout').click()
@@ -56,7 +57,9 @@ def check_slots():
             while more_dows:
                 time.sleep(1.5)
                 slots = driver.find_elements_by_css_selector('.ss-carousel-item')
-                for slot in slots:
+                # for slot in slots:
+                # for slot in itertools.islice(slots, 0, amazon_date_limit):
+                for slot_index, slot in zip(range(amazon_date_limit), slots):
                     if slot.value_of_css_property('display') != 'none':
                         slot.click()
                         date_containers = driver.find_elements_by_css_selector('.Date-slot-container')
@@ -68,20 +71,23 @@ def check_slots():
                                     slots_available = True
                                 else:
                                     print(unattended_slots.text.replace('Select a time', '').strip())
-
                 next_button = driver.find_element_by_css_selector('#nextButton')
                 more_dows = not next_button.get_property('disabled')
-                if more_dows: next_button.click()
+                if more_dows and slot_index < (amazon_date_limit-1):
+                    next_button.click()
+                else:
+                    more_dows = False
 
             if slots_available:
-                client.messages.create(to=to_mobilenumber,
-                       from_=from_mobilenumber,
-                       body=available_slots)
+                # client.messages.create(to=to_mobilenumber,
+                #        from_=from_mobilenumber,
+                #        body=available_slots)
                 print('Slots Available!')
+                print(available_slots)
             else:
                 print('No slots available. Sleeping ...')
                 more_dows = True
-                time.sleep(300)
+                time.sleep(150)
                 driver.refresh()
 
         terminate(driver)
