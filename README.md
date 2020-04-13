@@ -35,16 +35,16 @@ $ sudo easy_install pip
 Install Twilio
 
 ```sh
-$ sudo pip install twilio
+$ sudo pip install twilio --ignore-installed six
 ```
 
 Install rest of the required packages
 
 ```sh
-$ pip install -r requirements/requirements.txt
+$ sudo pip install -r requirements/requirements.txt
 ```
 
-5. Configure the application, please config.py and 
+5. Configure the application, please config.py 
 
 6. Run the script
 
