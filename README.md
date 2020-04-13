@@ -44,7 +44,7 @@ Install rest of the required packages
 $ sudo pip install -r requirements/requirements.txt
 ```
 
-5. Configure the application, please config.py 
+5. Configure the application, please open and edit config.py 
 
 6. Run the script
 
