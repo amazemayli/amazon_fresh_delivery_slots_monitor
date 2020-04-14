@@ -57,7 +57,7 @@ $ python fresh.py
 
 Unlike this Apple Script solution (https://github.com/ahertel/Amazon-Fresh-Whole-Foods-delivery-slot-finder/), which only works with select Amazon Fresh subscribers, this Python version out-of-the-box works with users who get the following check out experience.
 
-![Bay Area](https://i.imgur.com/PYrO9Il.jpg)
+![Bay Area](https://i.imgur.com/KVRw0oA.png)
 
 If your Amazon Fresh checkout experience looks a bit different, it's possible inspect the elements on the page and change a few lines of the Python code to accommodate.
 
