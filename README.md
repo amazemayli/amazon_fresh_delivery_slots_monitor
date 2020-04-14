@@ -1,8 +1,8 @@
 # Amazon Fresh Delivery Slots Monitor
 
-Tired of swiping over and over again to see if Amazon Fresh slots are available? Use a script to do the heavy-lifting for you. Uses the following:
+Tired of swiping over and over again to see if Amazon Fresh slots are available? Use a script to do the heavy-lifting for you. Solution leverages the following:
 
-  - Python 3.6
+  - Python 3.8.2
   - Selenium
   - Twilio
 
@@ -52,3 +52,15 @@ $ sudo pip install -r requirements/requirements.txt
 $ cd amazon
 $ python fresh.py
 ```
+
+### Checkout Experience Compatability
+
+Unlike this Apple Script solution (https://github.com/ahertel/Amazon-Fresh-Whole-Foods-delivery-slot-finder/), which only works with select Amazon Fresh subscribers, this Python version out-of-the-box works with users who get the following check out experience.
+
+![Bay Area](https://i.imgur.com/KVRw0oA.png)
+
+If your Amazon Fresh checkout experience looks a bit different, it's possible inspect the elements on the page and change a few lines of the Python code to accommodate.
+
+### 2FA Compatability
+
+Furthermore, this Python version takes into consideration reserving sufficient time for passing 2FA. The amount of seconds the script waits can be adjusted easily.
