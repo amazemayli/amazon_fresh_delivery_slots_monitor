@@ -1,6 +1,6 @@
 # Amazon Fresh Delivery Slots Monitor
 
-Tired of swiping over and over again to see if Amazon Fresh slots are available? Use a script to do the heavy-lifting for you. Uses the following:
+Tired of swiping over and over again to see if Amazon Fresh slots are available? Use a script to do the heavy-lifting for you. Solution leverages the following:
 
   - Python 3.8.2
   - Selenium
