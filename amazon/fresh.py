@@ -5,16 +5,19 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-# from twilio.rest import Client
+from twilio.rest import Client
+from random import randint
+import datetime
 
-from config import * # local configuration
+# Load configuration file
+from config import * 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(BASE_DIR)
 chromedriver = ROOT_DIR + "/chromedriver"
 
-# create twilio client
-# client = Client(account_sid, auth_token)
+# Create Twilio client
+client = Client(account_sid, auth_token)
 
 def create_driver():
     chrome_options = webdriver.ChromeOptions()
@@ -27,10 +30,11 @@ def terminate(driver):
 
 def check_slots():
     try:
-        print('Creating Chrome Driver ...')
+        # Login and get to the checkout page
+        print('Loading Selenium ...')
         driver = create_driver()
 
-        print('Logging into Amazon ...')
+        print('Loading Amazon ...')
         driver.get('https://www.amazon.com/gp/sign-in.html')
         email_field = driver.find_element_by_css_selector('#ap_email')
         email_field.send_keys(amazon_username)
@@ -39,26 +43,40 @@ def check_slots():
         password_field = driver.find_element_by_css_selector('#ap_password')
         password_field.send_keys(amazon_password)
         driver.find_element_by_css_selector('#signInSubmit').click()
-        input("Press Enter after completing secondary authentication challenge")
-        time.sleep(1.5)
-        print('Redirecting to Shopping Cart ...')
+        print('You have 30 seconds to do 2FA ...')
+        time.sleep(10)
+        print('You have 20 more seconds to do 2FA ...')
+        time.sleep(10)
+        print('You have 10 more seconds to do 2FA ...')
+        time.sleep(5)
+        print('You have 5 more seconds to do 2FA ...')
+        time.sleep(1)
+        print('You have 4 more seconds to do 2FA ...')
+        time.sleep(1)
+        print('You have 3 more seconds to do 2FA ...')
+        time.sleep(1)
+        print('You have 2 more seconds to do 2FA ...')
+        time.sleep(1)
+        print('You have 1 more second to do 2FA ...')
+        time.sleep(1)
+        print('Loading Shopping Cart ...')
         driver.get('https://www.amazon.com/gp/cart/view.html')
         time.sleep(1.5)
-        print('Checkout Step One ...')
+        print('Checking Out Page 1 ...')
         driver.find_element_by_xpath("//span[contains(.,'Checkout Amazon Fresh Cart')]").click()
         time.sleep(1.5)
-        print('Checkout Step Two ...')
+        print('Checking Out Page 2 ...')
         driver.find_element_by_name('proceedToCheckout').click()
 
+        # Main loop
         more_dows = True
         slots_available = False
         available_slots = ""
         while not slots_available:
             while more_dows:
-                time.sleep(1.5)
+                # Add some randominess in click timing
+                time.sleep(randint(2,5))
                 slots = driver.find_elements_by_css_selector('.ss-carousel-item')
-                # for slot in slots:
-                # for slot in itertools.islice(slots, 0, amazon_date_limit):
                 for slot_index, slot in zip(range(amazon_date_limit), slots):
                     if slot.value_of_css_property('display') != 'none':
                         slot.click()
@@ -73,21 +91,47 @@ def check_slots():
                                     print(unattended_slots.text.replace('Select a time', '').strip())
                 next_button = driver.find_element_by_css_selector('#nextButton')
                 more_dows = not next_button.get_property('disabled')
-                if more_dows and slot_index < (amazon_date_limit-1):
+                if more_dows:
                     next_button.click()
+                    time.sleep(randint(1,3))
                 else:
                     more_dows = False
 
             if slots_available:
-                # client.messages.create(to=to_mobilenumber,
-                #        from_=from_mobilenumber,
-                #        body=available_slots)
+                client.messages.create(to=to_mobilenumber,
+                        from_=from_mobilenumber,
+                        body=available_slots)
                 print('Slots Available!')
                 print(available_slots)
             else:
-                print('No slots available. Sleeping ...')
+                # Add some randominess in before we retry
+                random_wait = randint(45,555)
+                now = datetime.datetime.now()
+                now_string = now.strftime("%Y-%m-%d %H:%M:%S")
+                wait_message = "As of " + now_string + ", no Amazon Fresh slots available. Will retry in " + str(random_wait) + " seconds ..."
+                # For people who want to also receive a text message when there are no slots available
+                # client.messages.create(to=to_mobilenumber,
+                #        from_=from_mobilenumber,
+                #        body=wait_message)
+                print(wait_message)
                 more_dows = True
-                time.sleep(150)
+                time.sleep(random_wait-30)
+                print('There are 30 more seconds until retry ...')
+                time.sleep(10)
+                print('There are 20 more seconds until retry ...')
+                time.sleep(10)
+                print('There are 10 more seconds until retry ...')
+                time.sleep(5)
+                print('There are 5 more seconds until retry ...')
+                time.sleep(1)
+                print('There are 4 more seconds until retry ...')
+                time.sleep(1)
+                print('There are 3 more seconds until retry ...')
+                time.sleep(1)
+                print('There are 2 more seconds until retry ...')
+                time.sleep(1)
+                print('There is 1 more second until retry ...')
+                time.sleep(1)
                 driver.refresh()
 
         terminate(driver)
