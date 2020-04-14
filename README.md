@@ -2,7 +2,7 @@
 
 Tired of swiping over and over again to see if Amazon Fresh slots are available? Use a script to do the heavy-lifting for you. Uses the following:
 
-  - Python 3.6
+  - Python 3.8.2
   - Selenium
   - Twilio
 
