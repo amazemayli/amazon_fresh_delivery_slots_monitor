@@ -10,6 +10,10 @@ Forked from: https://github.com/bryan3189/amazonfresh_delivery_slot_alerts
 
 Original article: https://medium.com/better-programming/build-amazonfresh-delivery-slot-alerts-c9e12a429e23
 
+### Twilio Configuration
+
+Get a free Twilio account here: https://www.twilio.com/referral/RJhglh
+
 ### Setup Instructions For Brand New Machine
 
 1. Install Chrome: https://www.google.com/chrome/
