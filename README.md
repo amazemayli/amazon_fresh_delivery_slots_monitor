@@ -52,3 +52,15 @@ $ sudo pip install -r requirements/requirements.txt
 $ cd amazon
 $ python fresh.py
 ```
+
+### Checkout Experience Compatability
+
+Unlike this Apple Script solution (https://github.com/ahertel/Amazon-Fresh-Whole-Foods-delivery-slot-finder/), which only works with select Amazon Fresh subscribers, this Python version out-of-the-box works with users who get the following check out experience.
+
+![Bay Area](https://i.imgur.com/PYrO9Il.jpg)
+
+If your Amazon Fresh checkout experience looks a bit different, it's possible inspect the elements on the page and change a few lines of the Python code to accommodate.
+
+### 2FA Compatability
+
+Furthermore, this Python version takes into consideration reserving sufficient time for passing 2FA. The amount of seconds the script waits can be adjusted easily.
